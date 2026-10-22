@@ -81,7 +81,9 @@ The application will manage the following information:
 - **Batches:** Product references, quantities, expiration dates and received dates.
 - **Stock Transactions:** Deliveries, consumption, waste, adjustments, timestamps and responsible users.
 
-Firestore's offline caching capabilities will support temporary connectivity interruptions, with synchronization when connectivity is restored.
+
+Firestore provides local caching for viewing previously accessed inventory data during connectivity interruptions. Stock modifications requiring transactions will need an active connection to maintain inventory consistency.
+
 
 No additional third-party API is planned.
 
@@ -91,7 +93,7 @@ The main anticipated challenges include:
 
 1. Maintaining inventory consistency when multiple employees update stock simultaneously.
 2. Managing multiple product batches with different expiration dates.
-3. Applying an earliest-expiring-first approach when deducting stock.
+3. Deciding which product batch should be deducted first when stock is consumed.
 4. Keeping dashboard information and inventory alerts updated in real time.
 5. Managing offline synchronization without losing or duplicating transactions.
 6. Implementing Firestore security rules to prevent unauthorized access to another cafe's data.
@@ -144,8 +146,7 @@ Source code, installation instructions and additional documentation will be adde
 
 ## Repository
 
-[GitHub – CafeStock](https://github.com/elif-piskindemir/Cs31-Caf-Inventory-Expiration-Management)
-
+[GitHub – CafeStock](https://github.com/elif-piskindemir/Cs310-Cafe-Inventory-Expiration-Management)
 ---
 
 **Sabancı University – CS310 Mobile Application Development**

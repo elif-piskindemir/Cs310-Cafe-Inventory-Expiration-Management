@@ -1,5 +1,7 @@
 # CafeStock – Cafe Inventory & Expiration Management
+
 **CS310 – Mobile Application Development**
+
 **Sabancı University | Group 28**
 
 ## About the Project
@@ -12,58 +14,90 @@ CafeStock aims to provide a simple and centralized inventory management system t
 
 The application is intended exclusively for internal cafe operations and does not include customer-facing features.
 
+A key feature of CafeStock is **batch-level inventory tracking**. For example, a cafe may have 12 liters of milk, with 5 liters expiring tomorrow and 7 liters next week. CafeStock tracks these as separate batches rather than assigning a single expiration date to the entire product.
+
 ## Core Features
 
 ### 1. Product & Inventory Management
+
 - Add, edit, categorize and remove products.
-- Record product names, measurement units (kg, L, pcs), and storage locations.
+- Record product names, measurement units (kg, L, pcs) and storage locations.
 - Search and filter inventory items.
 
 ### 2. Batch-Based Expiration Tracking
+
 - Store multiple batches of the same product.
 - Track quantities and expiration dates separately for each batch.
 - Highlight products approaching their expiration dates.
 - Display expired products separately.
 
-For example, a cafe may have 12 liters of milk with 5 liters expiring tomorrow and 7 liters next week. CafeStock will track these as separate batches.
-
 ### 3. Stock Operations
+
 - Record incoming deliveries.
 - Track ingredient consumption.
 - Register waste and manual stock adjustments.
 - Automatically update inventory quantities.
 - Maintain transaction history with timestamps and responsible users.
+- Apply the First-Expiring, First-Out (FEFO) policy with manual batch selection.
+
+**Batch Deduction Policy (FEFO):**
+
+When an ingredient is consumed, CafeStock automatically deducts the required quantity from the earliest-expiring non-expired batch.
+
+If the selected batch does not contain enough stock, the remaining quantity is deducted from the next eligible batch.
+
+Staff members can manually select another eligible batch when necessary.
+
+Expired batches are excluded from normal consumption and can be recorded as waste.
 
 ### 4. Low-Stock & Expiration Alerts
+
 - Define minimum stock thresholds for individual products.
 - Display in-app warnings for low-stock items.
 - Highlight products approaching expiration.
 
 ### 5. Inventory Dashboard
+
 - Display the total number of products.
 - Show low-stock items.
 - Highlight expired products.
 - Summarize products approaching their expiration dates.
 
 ### 6. Shared Staff Access
-- Support user accounts with Firebase Authentication.
+
+- Support user authentication through Firebase Authentication.
 - Allow cafe owners to create cafe workspaces.
-- Enable employees to join their cafe workspace.
+- Enable owners to generate invitation codes.
+- Allow employees to request access using an invitation code.
+- Require owner approval before granting workspace access.
 - Synchronize inventory information across multiple devices.
+
+**Workspace Access & Permissions:**
+
+Cafe owners create workspaces and generate invitation codes for employees.
+
+Employees sign in, enter an invitation code and submit a membership request. The cafe owner must approve the request before the employee can access the shared inventory.
+
+The application defines two main user roles:
+
+- **Owner:** Can manage inventory, record stock operations, manage staff members, handle invitations and modify cafe settings.
+- **Barista:** Can view and update inventory and record stock operations, but cannot manage staff, invitations or cafe settings.
+
+These permissions will be enforced using Firestore Security Rules.
 
 ## Optional Features
 
 The following features may be implemented depending on available time and development progress:
 
 - Local device notifications for expiration dates and low stock.
-- Separate owner and barista permissions.
-- Waste and consumption statistics with charts.
+- Waste and consumption statistics with simple charts.
 - Barcode scanning for faster product identification.
+- More granular staff permissions.
 
 ## Technology Stack
 
 | Technology | Purpose |
-|------------|---------|
+|---|---|
 | Flutter | Cross-platform mobile application development |
 | Dart | Programming language |
 | Firebase Authentication | User authentication |
@@ -81,23 +115,21 @@ The application will manage the following information:
 - **Batches:** Product references, quantities, expiration dates and received dates.
 - **Stock Transactions:** Deliveries, consumption, waste, adjustments, timestamps and responsible users.
 
+A cloud database is required because multiple employees need access to the same inventory.
 
 Firestore provides local caching for viewing previously accessed inventory data during connectivity interruptions. Stock modifications requiring transactions will need an active connection to maintain inventory consistency.
-
 
 No additional third-party API is planned.
 
 ## Technical Challenges
 
-The main anticipated challenges include:
+The main anticipated technical challenges include:
 
-1. Maintaining inventory consistency when multiple employees update stock simultaneously.
-2. Managing multiple product batches with different expiration dates.
-3. Deciding which product batch should be deducted first when stock is consumed.
-4. Keeping dashboard information and inventory alerts updated in real time.
-5. Managing offline synchronization without losing or duplicating transactions.
-6. Implementing Firestore security rules to prevent unauthorized access to another cafe's data.
-7. Creating an intuitive mobile interface for efficient daily use.
+1. **Concurrent Inventory Updates:** Maintaining accurate stock quantities when multiple employees update the same product simultaneously. Firestore transactions are planned to address this issue.
+2. **FEFO Batch Deduction:** Implementing automatic earliest-expiring-first stock deduction with manual overrides while maintaining accurate quantities across multiple batches.
+3. **Real-Time Inventory Monitoring:** Computing expiration and low-stock warnings reliably and keeping the dashboard updated in real time.
+4. **Workspace Security:** Implementing secure invitation-based membership and enforcing owner/barista permissions through Firestore Security Rules.
+5. **User Interface Design:** Creating an intuitive mobile interface that allows busy cafe employees to record inventory changes in a few taps.
 
 ## Team Members
 
@@ -121,7 +153,7 @@ The main anticipated challenges include:
 | Umut Akın | App overview and core features |
 | Melis Atalay | Data requirements and potential challenges |
 | Elif Pişkindemir | GitHub repository, README.md, Flutter .gitignore, initial commit and collaborator setup |
-| Eray Bahar | Team coordination, proposal compilation, team review, TA communication and final PDF submission |
+| Eray Bahar | Team coordination, proposal compilation, team review and final PDF submission |
 
 ### Planned Development Responsibilities
 
@@ -130,7 +162,7 @@ The main anticipated challenges include:
 | Melis Atalay | Product catalog, categories, storage locations, batch management, search and filtering |
 | Umut Akın | Stock operations, quantity updates and transaction history |
 | Elif Pişkindemir | Inventory dashboard, expiration and low-stock detection, warnings and summaries |
-| Eray Bahar | Firebase Authentication, cafe workspaces, staff management, settings and Firestore security rules |
+| Eray Bahar | Firebase Authentication, cafe workspace and staff joining, settings |
 
 These responsibilities may be adjusted as development progresses.
 
@@ -138,15 +170,18 @@ All team members will participate in Flutter development, integration, testing a
 
 ## Development Status
 
-**Current Phase: Step 1 – Project Proposal & Repository Setup**
+**Current Phase: Project Proposal Finalization & Development Preparation**
 
-The project is currently in its initial planning stage. Application implementation has not yet begun.
+The project proposal has been revised to incorporate feedback on batch deduction rules, workspace access and staff permissions.
+
+The application is planned for development using Flutter and Firebase.
 
 Source code, installation instructions and additional documentation will be added as development progresses.
 
 ## Repository
 
 [GitHub – CafeStock](https://github.com/elif-piskindemir/Cs310-Cafe-Inventory-Expiration-Management)
+
 ---
 
 **Sabancı University – CS310 Mobile Application Development**

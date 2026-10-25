@@ -94,15 +94,6 @@ The following features may be implemented depending on available time and develo
 - Barcode scanning for faster product identification.
 - More granular staff permissions.
 
-## Technology Stack
-
-| Technology | Purpose |
-|---|---|
-| Flutter | Cross-platform mobile application development |
-| Dart | Programming language |
-| Firebase Authentication | User authentication |
-| Cloud Firestore | Cloud database and inventory synchronization |
-| Git & GitHub | Version control and team collaboration |
 
 ## Data Management
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'create_join_cafe_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -13,26 +14,38 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   bool _obscurePassword = true;
 
-  void _signUp() {
+
+  Future<void> _signUp() async {
     if (!_formKey.currentState!.validate()) return;
 
-    showDialog<void>(
+    final shouldContinue = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Form validated'),
         content: const Text(
           'Your registration details are valid. '
-              'Account creation will be connected later.',
+              'This is a UI demo; no account has been created yet. '
+              'Continue to workspace setup.',
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('Continue'),
           ),
         ],
       ),
     );
+
+    if (!mounted || shouldContinue != true) return;
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const CreateJoinCafeScreen(),
+      ),
+    );
   }
+
 
   @override
   void dispose() {

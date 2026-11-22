@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'signup_screen.dart';
+import '../../navigation/app_routes.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -19,10 +20,9 @@ class _LoginScreenState extends State<LoginScreen> {
   void _login() {
     if (!_formKey.currentState!.validate()) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Login form validated successfully!'),
-      ),
+    Navigator.pushReplacementNamed(
+      context,
+      AppRoutes.createJoinCafe,
     );
   }
 

@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import '../../navigation/app_routes.dart';
 
 class CreateJoinCafeScreen extends StatefulWidget {
   const CreateJoinCafeScreen({super.key});
@@ -60,38 +61,52 @@ class _CreateJoinCafeScreenState extends State<CreateJoinCafeScreen> {
 
     if (!mounted || result == null) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Demo: "$result" workspace created (not saved yet).',
-        ),
-      ),
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppRoutes.home,
+          (route) => false,
     );
+
   }
 
-  void _requestToJoin() {
+
+  Future<void> _requestToJoin() async {
     if (!_joinFormKey.currentState!.validate()) return;
 
     final code = _inviteCodeController.text.trim().toUpperCase();
 
-    showDialog<void>(
+    final continueToDemo = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Join Request'),
         content: Text(
           'Demo request for invitation code $code.\n\n'
-              'In the completed app, the cafe owner will '
-              'need to approve your request.',
+              'In the completed app, the cafe owner must approve '
+              'your request before you can access inventory.\n\n'
+              'For this UI demo, you can preview the dashboard.',
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('OK'),
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('Continue to Demo'),
           ),
         ],
       ),
     );
+
+    if (!mounted || continueToDemo != true) return;
+
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppRoutes.home,
+          (route) => false,
+    );
   }
+
 
   @override
   void dispose() {

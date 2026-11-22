@@ -3,6 +3,7 @@ import '../features/inventory/inventory_screen.dart';
 import '../features/dashboard/dashboard_screen.dart';
 import '../features/alerts/alerts_screen.dart';
 import '../features/stock/transaction_history_screen.dart';
+import '../features/staff/cafe_settings_screen.dart';
 
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
@@ -77,6 +78,20 @@ class MoreScreen extends StatelessWidget {
               );
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.settings_outlined),
+            title: const Text('Cafe Settings'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CafeSettingsScreen(),
+                ),
+              );
+            },
+          ),
+
         ],
       ),
     );

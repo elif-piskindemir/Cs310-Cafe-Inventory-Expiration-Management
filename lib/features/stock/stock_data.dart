@@ -110,10 +110,10 @@ class StockUtils {
   }
 
   static List<Deduction> calculateFefo(
-    List<Batch> batches,
-    double quantity,
-    String? firstBatchId,
-  ) {
+      List<Batch> batches,
+      double quantity,
+      String? firstBatchId,
+      ) {
     final available = batches.where((b) => !b.isExpired).toList();
     available.sort((a, b) => a.daysLeft.compareTo(b.daysLeft));
 
@@ -186,7 +186,7 @@ class StockStore {
       unit: 'L',
       quantityChange: 2,
       note: 'Received • Refrigerator',
-      date: _today.subtract(const Duration(days: 9)),
+      date: _today.subtract(const Duration(days: 9)).add(const Duration(hours: 9, minutes: 30)),
     ),
     StockTransaction(
       id: 't2',
@@ -196,7 +196,7 @@ class StockStore {
       unit: 'L',
       quantityChange: 5,
       note: 'Received • Refrigerator',
-      date: _today.subtract(const Duration(days: 5)),
+      date: _today.subtract(const Duration(days: 5)).add(const Duration(hours: 10, minutes: 15)),
     ),
     StockTransaction(
       id: 't3',
@@ -206,7 +206,7 @@ class StockStore {
       unit: 'L',
       quantityChange: 7,
       note: 'Received • Refrigerator',
-      date: _today.subtract(const Duration(days: 4)),
+      date: _today.subtract(const Duration(days: 4)).add(const Duration(hours: 8, minutes: 45)),
     ),
   ];
 

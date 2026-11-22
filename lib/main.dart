@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
-import 'features/authentication/login_screen.dart';
+
+import 'theme/app_theme.dart';
+import 'navigation/app_routes.dart';
 
 void main() {
   runApp(const CafeStockApp());
@@ -14,13 +16,11 @@ class CafeStockApp extends StatelessWidget {
     return MaterialApp(
       title: 'CafeStock',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF276A59),
-        ),
-        useMaterial3: true,
-      ),
-      home: const LoginScreen(),
+
+      theme: AppTheme.lightTheme,
+
+      initialRoute: AppRoutes.login,
+      routes: AppRoutes.routes,
     );
   }
 }

@@ -29,9 +29,13 @@ class _ProductDetailsScreenState
   List<Batch> get orderedBatches {
     final batches = StockStore.batchesFor(widget.product.name);
 
-    batches.sort(
-          (a, b) => a.daysLeft.compareTo(b.daysLeft),
-    );
+    batches.sort((a, b) {
+      if (a.isExpired != b.isExpired) {
+        return a.isExpired ? 1 : -1;
+      }
+
+      return a.daysLeft.compareTo(b.daysLeft);
+    });
 
     return batches;
   }
@@ -66,7 +70,7 @@ class _ProductDetailsScreenState
     setState(() {});
   }
 
-  Future<void> wasteAdjust() async {
+  Future<void> wasteOrAdjust() async {
     await Navigator.push(
       context,
       MaterialPageRoute(
@@ -81,18 +85,14 @@ class _ProductDetailsScreenState
     setState(() {});
   }
 
-  Future<void> viewHistory() async {
-    await Navigator.push(
+  void openHistory() {
+    Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => TransactionHistoryScreen(
-          productName: widget.product.name,
-        ),
+        builder: (context) =>
+            TransactionHistoryScreen(productName: widget.product.name),
       ),
     );
-
-    if (!mounted) return;
-    setState(() {});
   }
 
   Future<void> editProduct() async {
@@ -165,7 +165,6 @@ class _ProductDetailsScreenState
             for (int i = 0; i < orderedBatches.length; i++)
               _buildBatchCard(
                 orderedBatches[i],
-                i,
                 colors,
               ),
             const SizedBox(height: 12),
@@ -180,28 +179,25 @@ class _ProductDetailsScreenState
             SizedBox(
               height: 55,
               child: OutlinedButton.icon(
-                onPressed: wasteAdjust,
-                icon: const Icon(Icons.tune),
-                label: const Text('Waste / Adjust'),
-              ),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 55,
-              child: OutlinedButton.icon(
-                onPressed: viewHistory,
-                icon: const Icon(Icons.history),
-                label: const Text('Transaction History'),
-              ),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 55,
-              child: OutlinedButton.icon(
                 onPressed: addBatch,
                 icon: const Icon(Icons.add),
                 label: const Text('Add Batch'),
               ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              height: 55,
+              child: OutlinedButton.icon(
+                onPressed: wasteOrAdjust,
+                icon: const Icon(Icons.delete_outline),
+                label: const Text('Waste / Adjust'),
+              ),
+            ),
+            const SizedBox(height: 4),
+            TextButton.icon(
+              onPressed: openHistory,
+              icon: const Icon(Icons.history),
+              label: const Text('Transaction History'),
             ),
           ],
         ),
@@ -269,16 +265,32 @@ class _ProductDetailsScreenState
 
   Widget _buildBatchCard(
       Batch batch,
-      int index,
       ColorScheme colors,
       ) {
-    final expiringSoon = batch.daysLeft <= 2;
+    final expiringSoon =
+        !batch.isExpired && batch.daysLeft <= 2;
+
+    final usableBatches = orderedBatches
+        .where((b) => !b.isExpired && b.quantity > 0)
+        .toList();
+
+    final priorityIndex = usableBatches.indexOf(batch);
+
+    String expirationText;
+
+    if (batch.isExpired) {
+      expirationText = 'Expired';
+    } else if (batch.daysLeft == 0) {
+      expirationText = 'Expires today';
+    } else if (batch.daysLeft == 1) {
+      expirationText = 'Expires in 1 day';
+    } else {
+      expirationText = 'Expires in ${batch.daysLeft} days';
+    }
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      color: expiringSoon
-          ? colors.errorContainer
-          : null,
+      color: expiringSoon ? colors.errorContainer : null,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -299,13 +311,7 @@ class _ProductDetailsScreenState
               ],
             ),
             const SizedBox(height: 10),
-            Text(
-              batch.isExpired
-                  ? 'Expired'
-                  : batch.daysLeft == 0
-                  ? 'Expires today'
-                  : 'Expires in ${batch.daysLeft} days',
-            ),
+            Text(expirationText),
             const SizedBox(height: 5),
             Text(
               'Expiry date: ${StockUtils.formatDate(batch.expiryDate)}',
@@ -316,9 +322,15 @@ class _ProductDetailsScreenState
             ),
             const SizedBox(height: 12),
             Text(
-              'Priority ${index + 1} • FEFO',
+              batch.isExpired
+                  ? 'Expired • Not eligible for FEFO'
+                  : batch.quantity <= 0
+                  ? 'No stock available'
+                  : 'Priority ${priorityIndex + 1} • FEFO',
               style: TextStyle(
-                color: colors.primary,
+                color: batch.isExpired
+                    ? colors.error
+                    : colors.primary,
                 fontWeight: FontWeight.w600,
               ),
             ),

@@ -19,7 +19,7 @@ class CafeStockApp extends StatelessWidget {
 
       theme: AppTheme.lightTheme,
 
-      initialRoute: AppRoutes.login,
+      initialRoute: AppRoutes.home,
       routes: AppRoutes.routes,
     );
   }

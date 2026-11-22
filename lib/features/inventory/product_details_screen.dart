@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../stock/stock_data.dart';
 import '../stock/add_batch_screen.dart';
 import '../stock/consume_stock_screen.dart';
+import '../stock/waste_adjust_screen.dart';
+import '../stock/transaction_history_screen.dart';
 import 'product_info.dart';
 import 'add_edit_product_screen.dart';
 
@@ -63,6 +65,31 @@ class _ProductDetailsScreenState
     if (!mounted) return;
     setState(() {});
   }
+  Future<void> wasteOrAdjust() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WasteAdjustScreen(
+          productName: widget.product.name,
+          unit: widget.product.unit,
+        ),
+      ),
+    );
+
+    if (!mounted) return;
+    setState(() {});
+  }
+
+  void openHistory() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            TransactionHistoryScreen(productName: widget.product.name),
+      ),
+    );
+  }
+
   Future<void> editProduct() async {
     final result = await Navigator.push<bool>(
       context,
@@ -152,6 +179,21 @@ class _ProductDetailsScreenState
                 icon: const Icon(Icons.add),
                 label: const Text('Add Batch'),
               ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              height: 55,
+              child: OutlinedButton.icon(
+                onPressed: wasteOrAdjust,
+                icon: const Icon(Icons.delete_outline),
+                label: const Text('Waste / Adjust'),
+              ),
+            ),
+            const SizedBox(height: 4),
+            TextButton.icon(
+              onPressed: openHistory,
+              icon: const Icon(Icons.history),
+              label: const Text('Transaction History'),
             ),
           ],
         ),

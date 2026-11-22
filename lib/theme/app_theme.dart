@@ -6,6 +6,7 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
+      fontFamily: 'Poppins',
 
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,

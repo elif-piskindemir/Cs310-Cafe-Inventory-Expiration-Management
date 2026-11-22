@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../stock/stock_data.dart';
 import '../stock/add_batch_screen.dart';
 import '../stock/consume_stock_screen.dart';
+import '../stock/waste_adjust_screen.dart';
+import '../stock/transaction_history_screen.dart';
 import 'product_info.dart';
 import 'add_edit_product_screen.dart';
 
@@ -63,6 +65,36 @@ class _ProductDetailsScreenState
     if (!mounted) return;
     setState(() {});
   }
+
+  Future<void> wasteAdjust() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WasteAdjustScreen(
+          productName: widget.product.name,
+          unit: widget.product.unit,
+        ),
+      ),
+    );
+
+    if (!mounted) return;
+    setState(() {});
+  }
+
+  Future<void> viewHistory() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TransactionHistoryScreen(
+          productName: widget.product.name,
+        ),
+      ),
+    );
+
+    if (!mounted) return;
+    setState(() {});
+  }
+
   Future<void> editProduct() async {
     final result = await Navigator.push<bool>(
       context,
@@ -142,6 +174,24 @@ class _ProductDetailsScreenState
               child: FilledButton(
                 onPressed: consumeStock,
                 child: const Text('Consume Stock'),
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              height: 55,
+              child: OutlinedButton.icon(
+                onPressed: wasteAdjust,
+                icon: const Icon(Icons.tune),
+                label: const Text('Waste / Adjust'),
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              height: 55,
+              child: OutlinedButton.icon(
+                onPressed: viewHistory,
+                icon: const Icon(Icons.history),
+                label: const Text('Transaction History'),
               ),
             ),
             const SizedBox(height: 12),
